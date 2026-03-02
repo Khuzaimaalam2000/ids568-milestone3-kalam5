@@ -18,7 +18,13 @@ def train(n_estimators=10, max_depth=5):
     y = df['target']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    mlflow.set_tracking_uri("http://localhost:5000")
+    # If running in GitHub, use local file logging to avoid connection errors
+    # If running on your Mac, use your local server on port 5050
+    if os.environ.get('GITHUB_ACTIONS'):
+        mlflow.set_tracking_uri("file:./mlruns")
+    else:
+        mlflow.set_tracking_uri("http://localhost:5050")
+        
     mlflow.set_experiment("milestone3_experiment")
 
     with mlflow.start_run() as run:
